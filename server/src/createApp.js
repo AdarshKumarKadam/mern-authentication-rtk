@@ -16,7 +16,7 @@ function createApp() {
 		helmet.contentSecurityPolicy({
 			directives: {
 				defaultSrc: ["'self'"],
-				connectSrc: ["'self'", "http://localhost:3000"],
+				connectSrc: ["'self'", "https://mern-authentication-rtk-client.vercel.app/"],
 				styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"], // Allow styles from Google Fonts
 			},
 		})
