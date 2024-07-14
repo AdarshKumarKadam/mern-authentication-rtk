@@ -35,23 +35,23 @@ function createApp() {
   app.use('/api', routes);
 
   // Static file serving in production
-  if (process.env.NODE_ENV === 'production') {
+ //  if (process.env.NODE_ENV === 'production') {
 
-	const __dirname = path.resolve();
+	// const __dirname = path.resolve();
     
-    // Serve static files from the frontend build directory
-    app.use(express.static(path.join(__dirname,  '..', 'client', 'dist')));
+ //    // Serve static files from the frontend build directory
+ //    app.use(express.static(path.join(__dirname,  '..', 'client', 'dist')));
     
-    // Serve index.html for any other path to enable client-side routing
-    app.get('*', (req, res) => {
-      res.sendFile(path.resolve(__dirname,  '..', 'client', 'dist', 'index.html'));
-    });
-  } else {
-    // Development mode response
-    app.get("/", (req, res) => {
-      res.send("Server is ready");
-    });
-  }
+ //    // Serve index.html for any other path to enable client-side routing
+ //    app.get('*', (req, res) => {
+ //      res.sendFile(path.resolve(__dirname,  '..', 'client', 'dist', 'index.html'));
+ //    });
+ //  } else {
+ //    // Development mode response
+ //    app.get("/", (req, res) => {
+ //      res.send("Server is ready");
+ //    });
+ //  }
   
   // Error handling middleware
   app.use(notFound);
