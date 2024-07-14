@@ -40,11 +40,11 @@ function createApp() {
 	const __dirname = path.resolve();
     
     // Serve static files from the frontend build directory
-    app.use(express.static(path.join(__dirname, '..', '..', 'client', 'dist')));
+    app.use(express.static(path.join(__dirname,  '..', 'client', 'dist')));
     
     // Serve index.html for any other path to enable client-side routing
     app.get('*', (req, res) => {
-      res.sendFile(path.resolve(__dirname, '..', '..', 'client', 'dist', 'index.html'));
+      res.sendFile(path.resolve(__dirname,  '..', 'client', 'dist', 'index.html'));
     });
   } else {
     // Development mode response
