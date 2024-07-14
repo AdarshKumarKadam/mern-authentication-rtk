@@ -16,7 +16,7 @@ function createApp() {
     helmet.contentSecurityPolicy({
       directives: {
         defaultSrc: ["'self'"],
-        connectSrc: ["'self'", "http://localhost:3000"], // Update as per your needs
+        connectSrc: ["'self'", "http://localhost:3000"], 
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"], // Allow styles from Google Fonts
       },
     })
@@ -36,8 +36,8 @@ function createApp() {
 
   // Static file serving in production
   if (process.env.NODE_ENV === 'production') {
-    // Assuming this file is located at server/src/index.js
-    const __dirname = path.resolve();
+
+	const __dirname = path.resolve();
     
     // Serve static files from the frontend build directory
     app.use(express.static(path.join(__dirname, '..', '..', 'client', 'dist')));
