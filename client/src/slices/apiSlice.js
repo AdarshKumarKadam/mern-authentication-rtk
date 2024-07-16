@@ -1,7 +1,7 @@
 import { fetchBaseQuery, createApi } from '@reduxjs/toolkit/query/react';
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: 'https://mern-authentication-rtk.vercel.app/api',
+  baseUrl: 'https://mern-authentication-rtk-server.vercel.app/api',
   credentials: 'include', 
 });
 
