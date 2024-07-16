@@ -21,7 +21,13 @@ function createApp() {
       },
     })
   );
-  
+
+//to debug cors issue
+  app.use((req, res, next) => {
+  console.log("Incoming request from origin:", req.headers.origin);
+  next();
+});
+
   // CORS configuration
   app.use(cors({
     origin: ["https://mern-authentication-rtk-client.vercel.app"],
