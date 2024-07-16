@@ -1,6 +1,6 @@
 import { apiSlice } from './apiSlice';
 
-const USERS_URL = 'https://mern-authentication-rtk.vercel.app/api/user';
+const USERS_URL = 'https://mern-authentication-rtk-server.vercel.app/api/user';
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
