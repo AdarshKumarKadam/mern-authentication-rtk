@@ -34,6 +34,11 @@ function createApp() {
   // API routes
   app.use('/api', routes);
 
+	// Health check endpoint
+  app.get("/", (req, res) => {
+    res.send("Server is ready");
+  });
+
   // Static file serving in production
  //  if (process.env.NODE_ENV === 'production') {
 
