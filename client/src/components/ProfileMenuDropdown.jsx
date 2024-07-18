@@ -51,7 +51,7 @@ function ProfileMenuDropdown() {
           alt="Profile"
           className="rounded-full h-10 w-10"
         />
-        <p className="user">{userInfo?.name}</p>
+        <p className="user hidden md:block">{userInfo?.name}</p>
       </div>
       {dropdownOpen && (
         <div className="origin-top-right absolute right-0 mt-4 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">

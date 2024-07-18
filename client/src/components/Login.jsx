@@ -27,8 +27,8 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log(email , password)
       const response = await login({ email, password }).unwrap();
-      console.log('Login response:', response);
       dispatch(setCredentials(response));
       navigate('/dashboard');
     } catch (err) {

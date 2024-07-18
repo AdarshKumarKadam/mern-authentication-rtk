@@ -1,38 +1,60 @@
-import axios from 'axios';
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-import { useLocation, useNavigate } from 'react-router-dom';
+import axios from "axios";
+import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useResetPasswordMutation } from "../slices/usersApiSlice";
+import Loader from "./Loader";
 
 const ResetPassword = () => {
-  const [password, setPassword] = useState('');
-  const query = new URLSearchParams(useLocation().search);
-  const otp = query.get('otp');
-    const navigate = useNavigate();
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const [otp, setOtp] = useState("");
+
+  useEffect(() => {
+    // Parse OTP from URL path
+    const pathSegments = location.pathname.split("/");
+    const otpFromPath = pathSegments[pathSegments.length - 1];
+    setOtp(otpFromPath);
+  }, [location.pathname]);
 
   axios.defaults.withCredentials = true;
+
+  const [resetPassword, { isLoading }] = useResetPasswordMutation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await axios.post('http://localhost:3000/user/resetPassword', {password,otp});
-      toast.success(response.data.message);
-      navigate('/login')
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match!");
+      return;
+    }
 
+    try {
+      const response = await resetPassword({ otp, password });
+      if (response) {
+        toast.success(response?.data?.message);
+        navigate("/login");
+      } else {
+        throw new Error("Something went wrong!");
+      }
     } catch (err) {
-      toast.error(err.response?.data?.message || err.message);
+      // Check if it's a network error
+      if (!err.response) {
+        toast.error(
+          "Network error: Unable to connect to the server. Please try again later."
+        );
+      } else {
+        toast.error(err?.data?.message || err.message);
+      }
     }
   };
 
-  //   <img
-  //   className="mx-auto h-10 w-auto"
-  //   src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-  //   alt="Your Company"
-  // />
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Reset Password
         </h2>
@@ -41,15 +63,17 @@ const ResetPassword = () => {
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-             Enter new Password
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Enter new Password
             </label>
             <div className="mt-2">
               <input
                 id="password"
                 name="password"
                 type="password"
-
                 required
                 className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 value={password}
@@ -58,19 +82,54 @@ const ResetPassword = () => {
             </div>
           </div>
 
-
+          <div>
+            <label
+              htmlFor="confirm-password"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Confirm Password
+            </label>
+            <div className="mt-2">
+              <input
+                id="confirm-password"
+                name="confirm-password"
+                type="password"
+                required
+                className="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </div>
+          </div>
 
           <div>
             <button
+              disabled={isLoading}
               type="submit"
               className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Reset
             </button>
+            <p className="mt-6 text-xs text-gray-600 text-center">
+              Want to go back?{" "}
+              <a href="">
+                <span
+                  className="text-blue-900 font-semibold"
+                  onClick={() => {
+                    navigate("/login");
+                  }}
+                >
+                  Sign in
+                </span>
+              </a>
+            </p>
+            {isLoading && (
+              <div className="flex justify-center mt-4">
+                <Loader />
+              </div>
+            )}
           </div>
         </form>
-
-
       </div>
     </div>
   );
