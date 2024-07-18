@@ -25,7 +25,7 @@ function createApp() {
 
   // CORS configuration
   app.use(cors({
-    origin: ["https://mern-authentication-rtk-client.vercel.app"],
+    origin: "https://mern-authentication-rtk-client.vercel.app",
     methods: ["POST", "GET", "PATCH", "DELETE"],
     credentials: true
   }));
