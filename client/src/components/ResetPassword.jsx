@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -20,8 +19,6 @@ const ResetPassword = () => {
     setOtp(otpFromPath);
   }, [location.pathname]);
 
-  axios.defaults.withCredentials = true;
-
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
 
   const handleSubmit = async (e) => {
@@ -33,20 +30,20 @@ const ResetPassword = () => {
     }
 
     try {
-      const response = await resetPassword({ otp, password });
-      if (response) {
-        toast.success(response?.data?.message);
-        navigate("/login");
-      } else {
-        throw new Error("Something went wrong!");
-      }
+      const response = await resetPassword({ otp, password }).unwrap();
+      console.log("Response obj ",  response)
+
+      toast.success(response?.message);
+      navigate("/login");
+     
+      
     } catch (err) {
-      // Check if it's a network error
-      if (!err.response) {
-        toast.error(
-          "Network error: Unable to connect to the server. Please try again later."
-        );
+      console.log(err)
+      if (err.status === 'FETCH_ERROR') {
+        // Network error (server not reachable)
+        toast.error("Network error: Unable to reach the server");
       } else {
+        // Other types of errors (e.g., validation errors)
         toast.error(err?.data?.message || err.message);
       }
     }
@@ -112,16 +109,12 @@ const ResetPassword = () => {
             </button>
             <p className="mt-6 text-xs text-gray-600 text-center">
               Want to go back?{" "}
-              <a href="">
-                <span
-                  className="text-blue-900 font-semibold"
-                  onClick={() => {
-                    navigate("/login");
-                  }}
-                >
-                  Sign in
-                </span>
-              </a>
+              <span
+                className="text-blue-900 font-semibold cursor-pointer"
+                onClick={() => navigate("/login")}
+              >
+                Sign in
+              </span>
             </p>
             {isLoading && (
               <div className="flex justify-center mt-4">

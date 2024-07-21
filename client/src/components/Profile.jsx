@@ -46,8 +46,14 @@ const Profile = () => {
       dispatch(setCredentials({ ...response }));
       toast.success("Profile updated successfully!");
       navigate("/dashboard");
-    } catch (error) {
-      toast.error("Failed to update profile. Please try again.");
+    } catch (err) {
+      if (err.status === 'FETCH_ERROR') {
+        // Network error (server not reachable)
+        toast.error("Network error: Unable to reach the server");
+      } else {
+        // Other types of errors (e.g., validation errors)
+        toast.error(err?.data?.message || err.message);
+      }
     }
   };
 

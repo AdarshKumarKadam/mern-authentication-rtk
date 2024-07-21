@@ -20,10 +20,15 @@ const ForgotPassword = () => {
       const response = await forgotPassword({email}).unwrap()
       toast.success(response.message);
       navigate('/login')
-
     } catch (err) {
-      toast.error(err.response?.data?.message || err.message);
-    }
+      
+      if (err.status === 'FETCH_ERROR') {
+        // Network error (server not reachable)
+        toast.error("Network error: Unable to reach the server");
+      } else {
+        // Other types of errors (e.g., validation errors)
+        toast.error(err?.data?.message || err.message);
+      }    }
   };
 
   //   <img
