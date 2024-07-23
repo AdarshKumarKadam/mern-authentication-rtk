@@ -23,9 +23,7 @@ const SignUp = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log("Form Data: ", data);
-    console.log("Validation Errors: ", errors);
-
+   
     if (data.password !== data.confirmPassword) {
       toast.error("Passwords do not match!");
       return;
@@ -36,6 +34,7 @@ const SignUp = () => {
       toast.success("User created successfully!");
       navigate("/");
     } catch (err) {
+      console.log(err)
       if (err.status === "FETCH_ERROR") {
         toast.error("Network error: Unable to reach the server");
       } else {

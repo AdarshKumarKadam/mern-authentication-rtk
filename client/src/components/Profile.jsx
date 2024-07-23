@@ -34,7 +34,6 @@ const Profile = () => {
     }
 
     try {
-      console.log("user data: " + JSON.stringify(userInfo));
       const response = await updateUser({
         _id: userInfo?._id,
         name,

@@ -8,7 +8,7 @@ const authenticate = async (req,res,next)=>{
         const token = req.cookies.jwt;
         console.log("token : "+ token)
         if(!token) {
-            return res.status(401).json({error:"Please login first" })
+            return res.status(401).json({message:"Please login first" })
         }
         const decoded = jwt.verify(token,process.env.SECRET_KEY)
         req.user = User.findById(decoded.user._id).select('-password');

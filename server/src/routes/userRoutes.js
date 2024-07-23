@@ -8,6 +8,7 @@ const otpHandler = require("../utility/otpHandler");
 const asyncHandler = require("express-async-handler");
 const authenticate = require("../middlewares/authMiddleware");
 const roles = require("../utility/roles");
+const logger = require("../utility/logger");
 
 // Register user
 router.post(
@@ -18,11 +19,9 @@ router.post(
     const user = await User.findOne({ email: newUser.email });
 
     if (user) {
-      return res.status(400).json({ message: "User with email already exists !!" });
+       res.status(400)
+      throw new Error( "User with email already exists !!" );
     }
-
-    const hashedPassword = await bcrypt.hash(newUser.password, 13);
-    newUser.password = hashedPassword;
 
     const newUserInstance = new User(newUser);
     newUserInstance.role = roles.USER;
@@ -44,12 +43,18 @@ router.post(
 router.post(
   "/login",
   asyncHandler(async (req, res, next) => {
+
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
 
-    if (user && (await user.matchPassword(password))) {
-      generateToken(res, {
+    if (!user) {
+      res.status(404)
+     throw new Error( "User with email not found !!" );
+   }
+   
+   if (user && (await user.matchPassword(password)) ) {
+    const token =  generateToken(res, {
         id: user._id,
         email: user.email,
       });
